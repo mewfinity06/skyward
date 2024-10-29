@@ -131,6 +131,8 @@ Error parse_file(char *source) {
         curr_token.end = end;
         curr_token.kind = IDENT;
 
+        update_kind(&curr_token);
+
         // Reallocate memory if capacity is reached
         if (total >= capacity) {
             capacity *= 2; // Increase capacity, e.g., double
