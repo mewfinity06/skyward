@@ -47,11 +47,11 @@ Employee : impl {
         return self.Name;
     }
 
-    pub fn get_id : Int {
+    pub func get_id : Int {
         return self.ID;
     }
 
-    pub fn print : None {
+    pub func print : Void {
         io.print("Name: {self.Name}\n");
         io.print("ID: {self.ID}");
         self.Status.print();
@@ -60,7 +60,7 @@ Employee : impl {
 
 EmployeeStatus : impl {
 
-    pub print : None {
+    pub print : Void {
         switch(self) {
         ADMIN   => io.print("Admin"); break;
         MANAGER => io.print("Manager"); break;
