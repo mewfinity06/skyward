@@ -9,6 +9,7 @@ typedef struct Error {
         ERROR_GENERIC,
         ERROR_SYNTAX,
         ERROR_TOD0,
+        ERROR_ALLOCATE,
         ERROR_MAX,
     } type;
     char *msg;
