@@ -2,6 +2,23 @@
 
 ## A new langage by Ashton Sickler
 
+Simple reason? I got bored.
+I was watching YouTube and stumbled upon [Lens_r's FUNCompiler series](https://www.youtube.com/watch?v=apFUyLupFgE&list=PLysa8wRFCssxGKj_RxBWr3rwmjEYlJIpa) and finally decided to try to write my own! 
+
+If you have anything to contribute, I would love it! Criticism, comments, complaints, questions? Bring them on! Feel free to pull and add your own fucnctionality (As long as it complies with the License, of course). I believe in Open Source first.
+
+I have inspiration from some of my favorite languages, (including Golang, Rust, C++)
+
+#### Goals
+- [ ] Split file into tokens
+- [ ] Have a compile and simulate function
+- [ ] 
+
+### Note:
+
+This language is a work in progress. Syntax and semantics are subject to change.
+To see what is working, please check out Working!
+
 ### Working:
 - [ ] Types
 - [ ] Functions
@@ -19,8 +36,6 @@
 > 
 > #### Float
 > 
-> #### None
->
 > #### Void
 >
 > #### NULL
@@ -33,6 +48,8 @@
 > * Compact
 > * Loose
 > * Enum
+
+> ### Keywords
 
 ### Basic Syntax
 
@@ -57,9 +74,15 @@ func Main(argc: Int, argv: Char*) : Int {
     }
 
     return 0; // Every function MUST have a return statement, 
-              // even Main unless they return None
+              // even Main unless they return Void
 }
 ```
+
+### Control flow
+
+#### For loops
+
+#### While loops
 
 ### Functions
 
@@ -70,7 +93,7 @@ Untyped functions provide a quick and easy way to write a function that takes in
 ```rust
 // use statements and main function not included for clarity!
 
-func Foo : None {
+func Foo : Void {
     io.print("Untyped functions are cool!");
 }
 
@@ -92,7 +115,7 @@ Bar(); // returns "Untyped but a return??"
 Just like in anyother languages, Skyward has typed functions!
 
 ```rust
-func Baz(name: Char*) : None {
+func Baz(name: Char*) : Void {
     io.print("Hello, {name}!\n");
 }
 
@@ -169,7 +192,7 @@ Employee : impl {
         return self.ID;
     }
 
-    pub fn print : None {
+    pub fn print : Void {
         io.print("Name: {self.Name}\n");
         io.print("ID: {self.ID}");
         self.Status.print();
@@ -178,7 +201,7 @@ Employee : impl {
 
 EmployeeStatus : impl {
 
-    pub print : None {
+    pub print : Void {
         switch(self) {
         ADMIN   => io.print("Admin"); break;
         MANAGER => io.print("Manager"); break;
