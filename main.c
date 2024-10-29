@@ -74,23 +74,89 @@ Error lex(char *source, char **beg, char **end) {
     return err;
 }
 
+// Error parse_file(char *source) {
+//     char *beg = source;
+//     char *end = source;
+//     Error err = ok;
+
+//     size_t total = 0;
+
+//     Token *tokens = (Token*) malloc(sizeof(Token));
+//     Token *curr_token = token_new(&beg, &end, ROOT);
+
+//     tokens = curr_token;
+
+//     while ((err = lex(end, &beg, &end)).type == ERROR_NONE) {
+//         if (end - beg == 0) { break; }
+//         // printf("lexed: %.*s\n", end - beg, beg);
+
+//         curr_token->beginning = &beg;
+//         curr_token->end = &end;
+//         curr_token->kind = IDENT;
+
+//         tokens = realloc(tokens, (total + 1) * sizeof(Token));
+//         tokens[total] = *curr_token;
+
+//         total++;
+//     }
+
+//     for (size_t i = 0; i < total; i++) {
+//         token_print(&tokens[i]);
+//     }
+
+//     printf("Printed %ld total tokens\n", total);
+
+//     return err;
+// }
+
 Error parse_file(char *source) {
     char *beg = source;
     char *end = source;
     Error err = ok;
 
     size_t total = 0;
+    size_t capacity = 1;
+
+    Token *tokens = (Token*) malloc(capacity * sizeof(Token));
+    if (tokens == NULL) {
+        ERROR_PREP(err, ERROR_ALLOCATE, "Unable to allocate tokens");
+        return err;
+    } // Handle allocation failure
 
     while ((err = lex(end, &beg, &end)).type == ERROR_NONE) {
-        if (end - beg == 0) { break; }
-        printf("lexed: %.*s\n", end - beg, beg);
-        total++;
+        if (end - beg == 0) break;
+
+        Token curr_token;
+        curr_token.beginning = beg;
+        curr_token.end = end;
+        curr_token.kind = IDENT;
+
+        // Reallocate memory if capacity is reached
+        if (total >= capacity) {
+            capacity *= 2; // Increase capacity, e.g., double
+            Token *new_tokens = realloc(tokens, capacity * sizeof(Token));
+            if (new_tokens == NULL) { // Handle realloc failure
+                free(tokens);
+                ERROR_PREP(err, ERROR_ALLOCATE, "Unable to reallocate tokens");
+                return err;
+            }
+            tokens = new_tokens;
+        }
+
+        tokens[total++] = curr_token;
+    }
+
+    for (size_t i = 0; i < total; i++) {
+        token_print(&tokens[i]);
     }
 
     printf("Printed %ld total tokens\n", total);
 
+    free(tokens); // Free allocated memory for tokens
+
     return err;
 }
+
 
 int main(int argc, char **argv) {
     if (argc <= 1) {
