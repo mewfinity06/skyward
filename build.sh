@@ -1,1 +1,1 @@
-gcc -o main main.c -lm
+gcc -o main main.c -lm -I./src
