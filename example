@@ -75,7 +75,7 @@ EmployeeStatus : impl {
 
 }
 
-func Main() : Int {
+func main() : Int {
     // Using the member function
     const employee1 : Employee = Employee.new(name: "Ashton", status: ADMIN);
     employee1.print();
