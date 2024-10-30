@@ -1,0 +1,15 @@
+use io;
+
+func main() : Int {
+    io.print("Numbers Test\n");
+
+    mut total : Int = 0;
+
+    total += 1;
+    total += 4;
+
+    // This should print out 5
+    io.print("Total: {total}\n");
+
+    return 0;
+}
