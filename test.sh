@@ -1,12 +1,4 @@
-./build.sh
-
-echo --------------
-echo -- Testing! --
-echo --------------
-
 ./main examples/numbers.skw
+echo --------------
 ./main example
-
-echo ----------
-echo -- Done --
-echo ----------
+echo --------------
