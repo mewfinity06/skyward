@@ -63,16 +63,44 @@ Error lex(char *source, char **beg, char **end) {
         ERROR_PREP(err, ERROR_ARGS, "Cannot lex empty source");
         return err;
     }
+    
     *beg = source;
-    *beg += strspn(*beg, whitespace);
+    *beg += strspn(*beg, whitespace); // Skip leading whitespace
     *end = *beg;
-    if (**end == '\0') { return err; }
-    *end += strcspn(*beg, delimiters);
+    
+    if (**end == '\0') {
+        return err; // End of source, nothing to lex
+    }
+
+    // Check for quoted strings
+    if (**beg == '"' || **beg == '\'') {
+        char quote_char = **beg;  // store the type of quote (' or ")
+        *end = *beg + 1;          // Start after the initial quote
+
+        // Iterate until we find the closing quote or end of the string
+        while (**end != '\0') {
+            if (**end == '\\' && *(*end + 1) == quote_char) {
+                *end += 2; // Skip escaped quote (e.g., \" or \')
+            } else if (**end == quote_char) {
+                *end += 1; // Move past the closing quote
+                break;
+            } else {
+                *end += 1; // Move to the next character
+            }
+        }
+    } else {
+        // Standard tokenization (no quotes)
+        *end += strcspn(*beg, delimiters);
+    }
+
+    // If *end didn't advance, ensure it moves by at least 1 character
     if (*end == *beg) {
         *end += 1;
     }
+    
     return err;
 }
+
 
 Error parse_file(char *source) {
     char *beg = source;

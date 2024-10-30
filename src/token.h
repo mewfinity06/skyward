@@ -38,6 +38,8 @@ typedef enum {
     RIGHT_BRACE,
     SEMICOLON,
     COMMA,
+    DOUBLE_QUOTED_STRING,
+    SINGLE_QUOTED_STRING,
     UNKNOWN,
     // Add more as needed
     TOKEN_KIND_MAX,
@@ -45,7 +47,7 @@ typedef enum {
 
 
 char* human(TokenKind kind) {
-    assert(TOKEN_KIND_MAX == 32 && "Not all tokens are handled"); 
+    assert(TOKEN_KIND_MAX == 34 && "Not all tokens are handled"); 
     switch (kind) {
     case ROOT:
         return "ROOT";
@@ -109,6 +111,10 @@ char* human(TokenKind kind) {
         return "SEMICOLON";
     case COMMA:
         return "COMMA";
+    case DOUBLE_QUOTED_STRING:
+        return "DOUBLE_QUOTED_STRING";
+    case SINGLE_QUOTED_STRING:
+        return "SINGLE_QUOTED_STRING";
     case UNKNOWN:
         return "UNKNOWN";
     }
@@ -180,7 +186,7 @@ Error update_kind(Token *token) {
     memcpy(word, token->beginning, length);
     word[length] = '\0'; // Null-terminate for string functions
 
-    assert(TOKEN_KIND_MAX == 32 && "Not all tokens are handled");
+    assert(TOKEN_KIND_MAX == 34 && "Not all tokens are handled");
 
     if (strcmp(word, "+") == 0) {
         token->kind = PLUS;
@@ -236,6 +242,10 @@ Error update_kind(Token *token) {
         token->kind = SEMICOLON;
     } else if (strcmp(word, ",") == 0) {
         token->kind = LEFT_SQRUARE;
+    } else if (word[0] == '"' && word[strlen(word)-1] == '"') {
+        token->kind = DOUBLE_QUOTED_STRING;
+    } else if (word[0] == '\'' && word[strlen(word)-1] == '\'') {
+        token->kind = SINGLE_QUOTED_STRING;
     } else if (atoi(word) != 0 || strcmp(word, "0") == 0) {
         token->kind = NUMBER;
     } else if (is_keyword(word)) {
