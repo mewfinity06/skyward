@@ -9,15 +9,31 @@ If you have anything to contribute, I would love it! Criticism, comments, compla
 
 I have inspiration from some of my favorite languages, (including Golang, Rust, C++)
 
-#### Goals
-- [ ] Split file into tokens
-- [ ] Have a compile and simulate function
-- [ ] 
-
 ### Note:
 
 This language is a work in progress. Syntax and semantics are subject to change.
 To see what is working, please check out Working!
+
+#### TODO
+
+- [x] Split file into tokens
+  - [ ] Have line and column numbers for debugging
+- [ ] Create an AST
+- [ ] Compile
+  - [ ] Support Linux
+    - x86_64. NASM?
+  - [ ] Support Windows
+  - [ ] Support MacOS
+- [ ] Simulate | May be depricated at some point
+
+#### Goals
+
+- [ ] Have a compile and simulate function (may change this to purely compiled)
+- [ ] Build in Error types
+- [ ] Have memority safety akin to Rust
+- [ ] Work close to the hardware like C
+- [ ] Self-hosting for bootstraping
+
 
 ### Working:
 - [ ] Types
@@ -27,29 +43,72 @@ To see what is working, please check out Working!
   - [ ] Loose
   - [ ] Enumerations
 - [ ] Struct Member Functions
-
+  
 > ### Basic Types
 >
-> #### Int
+> #### Integers
+>
+> Int &rarr; 32 Bit Signed
+> UInt &rarr; 32 Bit Unsigned
 > 
 > #### Char
+>
+> Char &rarr; 8 Bit Signed
 > 
 > #### Float
+>
+> Float &rarr; 32 Bit Signed
+> UFloat &rarr; 32 Bit Unsigned
+>
+> #### Byte
+>
+> Byte &rarr; 8 Bit Unsigned
 > 
 > #### Void
 >
+> Void &rarr; Size depends on architecture
+>
 > #### NULL
+>
+> Null &rarr; Size depends on architecture
 
 > ### Complex Types
 > 
-> #### Complex
+> #### Complex | Included in math.complex
+>
+> Complex &rarr; 16 Bit Signed | First 8 Bits "Real Part" | Second 8 Bits "Imaginary Part"
+> 
+> #### Error | Included in std.err
+>
+> Error &rarr; There are several kinds of Error
+> 
+> Defined as:
+> ```rust
+> struct Error : Compact {
+>   struct Kind : enum {
+>       ErrorDefault, 
+>       ErrorAllocate,
+>       ErrorSyntax,
+>       ErrorLogic,
+>       ...
+>   },
+>   Message: Char*,
+> } 
+> ```
+> You can define your own error values!
 >
 > #### Struct
-> * Compact
-> * Loose
+> * Compact (Think structs)
+>   * Think of structs in C, all of the data is stored next to eachother
+> * Loose (Think classes)
+>   * This is like how C++ and other OOP languages structure their classes
 > * Enum
+>   * Enumerations like in other languages
+>   * Can be defined in other struct types
+>
 
 > ### Keywords
+> All Types are keywords
 
 ### Basic Syntax
 
