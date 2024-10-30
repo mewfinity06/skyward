@@ -55,7 +55,7 @@ void print_usage(char **argv) {
 }
 
 const char *whitespace = " \r\n";
-const char *delimiters = " \r\n!@#$\%^&*()_-+=[]{}|\\:;\"\'<>,.?/";
+const char *delimiters = " \r\n!@#$\%^&*()-+=[]{}|\\:;\"\'<>,.?/";
 
 Error lex(char *source, char **beg, char **end) {
     Error err = ok;
@@ -73,41 +73,6 @@ Error lex(char *source, char **beg, char **end) {
     }
     return err;
 }
-
-// Error parse_file(char *source) {
-//     char *beg = source;
-//     char *end = source;
-//     Error err = ok;
-
-//     size_t total = 0;
-
-//     Token *tokens = (Token*) malloc(sizeof(Token));
-//     Token *curr_token = token_new(&beg, &end, ROOT);
-
-//     tokens = curr_token;
-
-//     while ((err = lex(end, &beg, &end)).type == ERROR_NONE) {
-//         if (end - beg == 0) { break; }
-//         // printf("lexed: %.*s\n", end - beg, beg);
-
-//         curr_token->beginning = &beg;
-//         curr_token->end = &end;
-//         curr_token->kind = IDENT;
-
-//         tokens = realloc(tokens, (total + 1) * sizeof(Token));
-//         tokens[total] = *curr_token;
-
-//         total++;
-//     }
-
-//     for (size_t i = 0; i < total; i++) {
-//         token_print(&tokens[i]);
-//     }
-
-//     printf("Printed %ld total tokens\n", total);
-
-//     return err;
-// }
 
 Error parse_file(char *source) {
     char *beg = source;
@@ -152,7 +117,7 @@ Error parse_file(char *source) {
         token_print(&tokens[i]);
     }
 
-    printf("Printed %ld total tokens\n", total);
+    printf("Lexed %ld total tokens\n", total);
 
     free(tokens); // Free allocated memory for tokens
 

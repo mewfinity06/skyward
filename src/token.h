@@ -11,21 +11,33 @@ typedef enum {
     IDENT,
     NUMBER,
     KEYWORD,
-    OPERATOR_PLUS,
-    OPERATOR_MINUS,
-    OPERATOR_MULTIPLY,
-    OPERATOR_DIVIDE,
+    PLUS,
+    MINUS,
+    STAR,
+    DIVIDE,
     ASSIGNMENT,
-    COMPARISON_EQUAL,
-    COMPARISON_NOT_EQUAL,
+    BANG,
+    AROBASE,
+    POUND,
+    DOLLAR,
+    PERCENT,
+    LEFT_SQRUARE,
+    RIGHT_SQUARE,
+    PIPE,
+    BACK_SLASH,
+    COLON,
+    DOUBLE_QUOTE,
+    SINGLE_QUOTE,
+    LEFT_ARROW,
+    RIGHT_ARROW,
+    DOT,
+    QUESTION,
     LEFT_PAREN,
     RIGHT_PAREN,
     LEFT_BRACE,
     RIGHT_BRACE,
     SEMICOLON,
     COMMA,
-    STRING_LITERAL,
-    CHAR_LITERAL,
     UNKNOWN,
     // Add more as needed
     TOKEN_KIND_MAX,
@@ -33,7 +45,7 @@ typedef enum {
 
 
 char* human(TokenKind kind) {
-    assert(TOKEN_KIND_MAX == 20 && "Not all tokens are handled");
+    assert(TOKEN_KIND_MAX == 32 && "Not all tokens are handled"); 
     switch (kind) {
     case ROOT:
         return "ROOT";
@@ -43,20 +55,48 @@ char* human(TokenKind kind) {
         return "NUMBER";
     case KEYWORD:
         return "KEYWORD";
-    case OPERATOR_PLUS:
-        return "OPERATOR_PLUS";
-    case OPERATOR_MINUS:
-        return "OPERATOR_MINUS";
-    case OPERATOR_MULTIPLY:
-        return "OPERATOR_MULTIPLY";
-    case OPERATOR_DIVIDE:
-        return "OPERATOR_DIVIDE";
+    case PLUS:
+        return "PLUS";
+    case MINUS:
+        return "MINUS";
+    case STAR:
+        return "STAR";
+    case DIVIDE:
+        return "DIVIDE";
     case ASSIGNMENT:
         return "ASSIGNMENT";
-    case COMPARISON_EQUAL:
-        return "COMPARISON_EQUAL";
-    case COMPARISON_NOT_EQUAL:
-        return "COMPARISON_NOT_EQUAL";
+    case BANG:
+        return "BANG";
+    case AROBASE:
+        return "AROBACE";
+    case POUND:
+        return "POUND";
+    case DOLLAR:
+        return "DOLLAR";
+    case PERCENT:
+        return "PERCENT";
+    case LEFT_SQRUARE:
+        return "LEFT_SQUARE";
+    case RIGHT_SQUARE:
+        return "RIGHT_SQUARE";
+    case PIPE:
+        return "PIPE";
+    case BACK_SLASH:
+        return "BACK_SLASH";
+    case COLON:
+        return "COLON";
+    case DOUBLE_QUOTE:
+        return "DOUBLE_QUOTE";
+    case SINGLE_QUOTE:
+        return "SINGLE_QUOTE";
+    case LEFT_ARROW:
+        return "LEFT_ARROW";
+    case RIGHT_ARROW:
+        return "RIGHT_ARROW";
+    case DOT:
+        return "DOT";
+    case QUESTION:
+        return "QUESTION";
     case LEFT_PAREN:
         return "LEFT_PAREN";
     case RIGHT_PAREN:
@@ -69,24 +109,25 @@ char* human(TokenKind kind) {
         return "SEMICOLON";
     case COMMA:
         return "COMMA";
-    case STRING_LITERAL:
-        return "STRING_LITERAL";
-    case CHAR_LITERAL:
-        return "CHAR_LITERAL";
     case UNKNOWN:
-        return "UNKNOWN";
-    default:
         return "UNKNOWN";
     }
 }
 
 
+
 #define keyword_len sizeof(keywords) / sizeof(keywords[0])
 const char *keywords[] = {
+    // Builtin types
     "Int", "UInt", "Char", "Float", "UFloat", "Byte",
-    "Void", "NULL", "struct", "Compact", "Loose", "Enum",
-    "use", "mut", "const", "func", "impl", "private", "public",
-    "if", "else", "switch", "final", "return"
+    "Void", "NULL", 
+    // Struct keywords
+    "struct", "Compact", "Loose", "Enum",
+    // Variable keywords
+    "mut", "const",
+    // Misc keywords
+    "func", "impl", "private", "public",
+    "if", "else", "switch", "final", "return", "use",
 };
 
 int is_identifier(char *word) {
@@ -97,7 +138,7 @@ int is_identifier(char *word) {
 }
 
 int is_keyword(char *word) {
-    for (int i = 0; i < keyword_len; ++i) {
+    for (int i = 0; i < (keyword_len); ++i) {
         if (strcmp(word, keywords[i]) == 0) { return 1; }
     }
     return 0;
@@ -123,7 +164,9 @@ Token *token_new(char *beginning, char *end, TokenKind kind) {
 }
 
 void token_print(Token *token) {
-    printf("Token\n  Kind: %s,\n  Word: `%.*s`\n", human(token->kind), (int)(token->end - token->beginning), token->beginning);
+    printf("Token - Kind: %s\n", human(token->kind));
+    printf("        Word: %.*s\n", (int)(token->end - token->beginning), token->beginning);
+    printf("\n");
 }
 
 Error update_kind(Token *token) {
@@ -137,14 +180,62 @@ Error update_kind(Token *token) {
     memcpy(word, token->beginning, length);
     word[length] = '\0'; // Null-terminate for string functions
 
+    assert(TOKEN_KIND_MAX == 32 && "Not all tokens are handled");
+
     if (strcmp(word, "+") == 0) {
-        token->kind = OPERATOR_PLUS;
+        token->kind = PLUS;
     } else if (strcmp(word, "-") == 0) {
-        token->kind = OPERATOR_MINUS;
+        token->kind = MINUS;
     } else if (strcmp(word, "*") == 0) {
-        token->kind = OPERATOR_MULTIPLY;
+        token->kind = STAR;
     } else if (strcmp(word, "/") == 0) {
-        token->kind = OPERATOR_DIVIDE;
+        token->kind = DIVIDE;
+    } else if (strcmp(word, "=") == 0) {
+        token->kind = ASSIGNMENT;
+    } else if (strcmp(word, "!") == 0) {
+        token->kind = BANG;
+    } else if (strcmp(word, "@") == 0) {
+        token->kind = AROBASE;
+    } else if (strcmp(word, "/#") == 0) {
+        token->kind = POUND;
+    } else if (strcmp(word, "$") == 0) {
+        token->kind = DOLLAR;
+    } else if (strcmp(word, "%") == 0) {
+        token->kind = PERCENT;
+    } else if (strcmp(word, "[") == 0) {
+        token->kind = LEFT_SQRUARE;
+    } else if (strcmp(word, "]") == 0) {
+        token->kind = RIGHT_SQUARE;
+    } else if (strcmp(word, "|") == 0) {
+        token->kind = PIPE;
+    } else if (strcmp(word, "\\") == 0) {
+        token->kind = BACK_SLASH;
+    } else if (strcmp(word, ":") == 0) {
+        token->kind = COLON;
+    } else if (strcmp(word, "\"") == 0) {
+        token->kind = DOUBLE_QUOTE;
+    } else if (strcmp(word, "'") == 0) {
+        token->kind = SINGLE_QUOTE;
+    } else if (strcmp(word, "<") == 0) {
+        token->kind = LEFT_ARROW;
+    } else if (strcmp(word, ">") == 0) {
+        token->kind = RIGHT_ARROW;
+    } else if (strcmp(word, ".") == 0) {
+        token->kind = DOT;
+    } else if (strcmp(word, "?") == 0) {
+        token->kind = QUESTION;
+    } else if (strcmp(word, "(") == 0) {
+        token->kind = LEFT_PAREN;
+    } else if (strcmp(word, ")") == 0) {
+        token->kind = RIGHT_PAREN;
+    } else if (strcmp(word, "{") == 0) {
+        token->kind = LEFT_BRACE;
+    } else if (strcmp(word, "}") == 0) {
+        token->kind = RIGHT_BRACE;
+    } else if (strcmp(word, ";") == 0) {
+        token->kind = SEMICOLON;
+    } else if (strcmp(word, ",") == 0) {
+        token->kind = LEFT_SQRUARE;
     } else if (atoi(word) != 0 || strcmp(word, "0") == 0) {
         token->kind = NUMBER;
     } else if (is_keyword(word)) {
