@@ -36,6 +36,7 @@ Employee : impl {
     // Creates a new Employee struct and sets all of its attributes
     // accordingly.
     // The defer keyword activates after the return statement.
+    // In reverse order called
     public func new(name: Char*, status: EmployeeStatus) : Employee {
         defer ID_seed++;
         return Employee {
@@ -97,6 +98,7 @@ func main() : Int {
         ID: Employee.ID_seed + ENTRY;
         status: Entry;
     }
+    Employee.ID_seed++;
     employee2.print();
     // Prints:
     // Name: David
@@ -105,7 +107,7 @@ func main() : Int {
 
     const employee3 : Employee = Employee.new("Jacklyn", ENTRY);
     employee3.print();
-    // Print
+    // Prints:
     // Name: Jacklyn
     // ID: 201
     // Clearance: Entry
