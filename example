@@ -2,6 +2,9 @@ use io;
 
 struct EmployeeStatus : Enum {
 // Enums start at 0, unless otherwise stated, steps by one whole value
+// You can define a explicit type (default is Int) by using 
+// @type (Type)
+// Note: Explicit types must have defined behavior when incemented
 
     // Explicit start
     @start 0;
@@ -27,7 +30,8 @@ struct Employee : Compact {
 // Calling Employee function
 Employee : impl {
 
-    private member mut ID_seed: Int = 0; // The member keyword makes ID_seed static on the Employee struct
+    // The member keyword makes ID_seed static on the Employee struct
+    private member mut ID_seed: Int = 0; 
 
     // Creates a new Employee struct and sets all of its attributes
     // accordingly.
