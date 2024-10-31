@@ -74,7 +74,7 @@ Error lex(char *source, char **beg, char **end) {
 
     // Check for quoted strings
     if (**beg == '"' || **beg == '\'') {
-        char quote_char = **beg;  // store the type of quote (' or ")
+        char quote_char = **beg;  // Store the type of quote (' or ")
         *end = *beg + 1;          // Start after the initial quote
 
         // Iterate until we find the closing quote or end of the string
@@ -89,8 +89,19 @@ Error lex(char *source, char **beg, char **end) {
             }
         }
     } else {
-        // Standard tokenization (no quotes)
-        *end += strcspn(*beg, delimiters);
+        // Check for multi-character tokens
+        if ((strncmp(*beg, "++", 2) == 0) || (strncmp(*beg, "--", 2) == 0) ||
+            (strncmp(*beg, "+=", 2) == 0) || (strncmp(*beg, "-=", 2) == 0) ||
+            (strncmp(*beg, "*=", 2) == 0) || (strncmp(*beg, "/=", 2) == 0) ||
+            (strncmp(*beg, "<=", 2) == 0) || (strncmp(*beg, ">=", 2) == 0) ||
+            (strncmp(*beg, "==", 2) == 0) || (strncmp(*beg, "!=", 2) == 0) ||
+            (strncmp(*beg, "||", 2) == 0) || (strncmp(*beg, "&&", 2) == 0) ||
+            (strncmp(*beg, "->", 2) == 0) || (strncmp(*beg, "=>", 2) == 0)) {
+            *end = *beg + 2; // Advance by 2 characters for multi-character tokens
+        } else {
+            // Standard tokenization for single characters or other delimiters
+            *end += strcspn(*beg, delimiters);
+        }
     }
 
     // If *end didn't advance, ensure it moves by at least 1 character
@@ -100,6 +111,7 @@ Error lex(char *source, char **beg, char **end) {
     
     return err;
 }
+
 
 
 Error parse_file(char *source) {

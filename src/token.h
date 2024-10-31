@@ -8,9 +8,13 @@
 
 typedef enum {
     ROOT,
+
     IDENT,
+    DOUBLE_QUOTED_STRING,
+    SINGLE_QUOTED_STRING,
     NUMBER,
     KEYWORD,
+
     PLUS,
     MINUS,
     STAR,
@@ -38,8 +42,26 @@ typedef enum {
     RIGHT_BRACE,
     SEMICOLON,
     COMMA,
-    DOUBLE_QUOTED_STRING,
-    SINGLE_QUOTED_STRING,
+
+    PLUS_PLUS,
+    MINUS_MINUS,
+
+    PLUS_EQUALS,
+    MINUS_EQUALS,
+    STAR_EQUALS,
+    DIV_EQUALS,
+
+    LESS_EQUAL,
+    GREATER_EQUAL,
+    DOUBLE_EQUALS,
+    BANG_EQUALS,
+
+    LOGICAL_OR,
+    LOGICAL_AND,
+
+    SKINNY_ARROW,
+    FAT_ARROW,
+
     UNKNOWN,
     // Add more as needed
     TOKEN_KIND_MAX,
@@ -47,78 +69,59 @@ typedef enum {
 
 
 char* human(TokenKind kind) {
-    assert(TOKEN_KIND_MAX == 34 && "Not all tokens are handled"); 
+    assert(TOKEN_KIND_MAX == 48 && "Not all tokens are handled"); 
     switch (kind) {
-    case ROOT:
-        return "ROOT";
-    case IDENT:
-        return "IDENT";
-    case NUMBER:
-        return "NUMBER";
-    case KEYWORD:
-        return "KEYWORD";
-    case PLUS:
-        return "PLUS";
-    case MINUS:
-        return "MINUS";
-    case STAR:
-        return "STAR";
-    case DIVIDE:
-        return "DIVIDE";
-    case ASSIGNMENT:
-        return "ASSIGNMENT";
-    case BANG:
-        return "BANG";
-    case AROBASE:
-        return "AROBACE";
-    case POUND:
-        return "POUND";
-    case DOLLAR:
-        return "DOLLAR";
-    case PERCENT:
-        return "PERCENT";
-    case LEFT_SQRUARE:
-        return "LEFT_SQUARE";
-    case RIGHT_SQUARE:
-        return "RIGHT_SQUARE";
-    case PIPE:
-        return "PIPE";
-    case BACK_SLASH:
-        return "BACK_SLASH";
-    case COLON:
-        return "COLON";
-    case DOUBLE_QUOTE:
-        return "DOUBLE_QUOTE";
-    case SINGLE_QUOTE:
-        return "SINGLE_QUOTE";
-    case LEFT_ARROW:
-        return "LEFT_ARROW";
-    case RIGHT_ARROW:
-        return "RIGHT_ARROW";
-    case DOT:
-        return "DOT";
-    case QUESTION:
-        return "QUESTION";
-    case LEFT_PAREN:
-        return "LEFT_PAREN";
-    case RIGHT_PAREN:
-        return "RIGHT_PAREN";
-    case LEFT_BRACE:
-        return "LEFT_BRACE";
-    case RIGHT_BRACE:
-        return "RIGHT_BRACE";
-    case SEMICOLON:
-        return "SEMICOLON";
-    case COMMA:
-        return "COMMA";
-    case DOUBLE_QUOTED_STRING:
-        return "DOUBLE_QUOTED_STRING";
-    case SINGLE_QUOTED_STRING:
-        return "SINGLE_QUOTED_STRING";
-    case UNKNOWN:
-        return "UNKNOWN";
+    case ROOT: return "ROOT";
+    case IDENT: return "IDENT";
+    case NUMBER: return "NUMBER";
+    case KEYWORD: return "KEYWORD";
+    case PLUS: return "PLUS";
+    case MINUS: return "MINUS";
+    case STAR: return "STAR";
+    case DIVIDE: return "DIVIDE";
+    case ASSIGNMENT: return "ASSIGNMENT";
+    case BANG: return "BANG";
+    case AROBASE: return "AROBACE";
+    case POUND: return "POUND";
+    case DOLLAR: return "DOLLAR";
+    case PERCENT: return "PERCENT";
+    case LEFT_SQRUARE: return "LEFT_SQUARE";
+    case RIGHT_SQUARE: return "RIGHT_SQUARE";
+    case PIPE: return "PIPE";
+    case BACK_SLASH: return "BACK_SLASH";
+    case COLON: return "COLON";
+    case DOUBLE_QUOTE: return "DOUBLE_QUOTE";
+    case SINGLE_QUOTE: return "SINGLE_QUOTE";
+    case LEFT_ARROW: return "LEFT_ARROW";
+    case RIGHT_ARROW: return "RIGHT_ARROW";
+    case DOT: return "DOT";
+    case QUESTION: return "QUESTION";
+    case LEFT_PAREN: return "LEFT_PAREN";
+    case RIGHT_PAREN: return "RIGHT_PAREN";
+    case LEFT_BRACE: return "LEFT_BRACE";
+    case RIGHT_BRACE: return "RIGHT_BRACE";
+    case SEMICOLON: return "SEMICOLON";
+    case COMMA: return "COMMA";
+    case DOUBLE_QUOTED_STRING: return "DOUBLE_QUOTED_STRING";
+    case SINGLE_QUOTED_STRING: return "SINGLE_QUOTED_STRING";
+    case PLUS_PLUS: return "PLUS_PLUS";
+    case MINUS_MINUS: return "MINUS_MINUS";
+    case PLUS_EQUALS: return "PLUS_EQUALS";
+    case MINUS_EQUALS: return "MINUS_EQUALS";
+    case STAR_EQUALS: return "STAR_EQUAL";
+    case DIV_EQUALS: return "DIV_EQUALS";
+    case LESS_EQUAL: return "LESS_EQUAL";
+    case GREATER_EQUAL: return "GREATER_EQUAL";
+    case DOUBLE_EQUALS: return "DOUBLE_EQUALS";
+    case BANG_EQUALS: return "BANG_EQUALS";
+    case LOGICAL_OR: return "LOGICAL_OR";
+    case LOGICAL_AND: return "LOGICAL_AND";
+    case SKINNY_ARROW: return "SKINNY_ARROW";
+    case FAT_ARROW: return "FAT_ARROW";
+    default: return "UNRECOGNIZED_TOKEN";
     }
 }
+
 
 
 
@@ -186,7 +189,7 @@ Error update_kind(Token *token) {
     memcpy(word, token->beginning, length);
     word[length] = '\0'; // Null-terminate for string functions
 
-    assert(TOKEN_KIND_MAX == 34 && "Not all tokens are handled");
+    assert(TOKEN_KIND_MAX == 48 && "Not all tokens are handled");
 
     if (strcmp(word, "+") == 0) {
         token->kind = PLUS;
@@ -228,8 +231,34 @@ Error update_kind(Token *token) {
         token->kind = RIGHT_ARROW;
     } else if (strcmp(word, ".") == 0) {
         token->kind = DOT;
-    } else if (strcmp(word, "?") == 0) {
-        token->kind = QUESTION;
+    } else if (strcmp(word, "++") == 0) {
+        token->kind = PLUS_PLUS;
+    } else if (strcmp(word, "--") == 0) {
+        token->kind = MINUS_MINUS;
+    } else if (strcmp(word, "+=") == 0) {
+        token->kind = PLUS_EQUALS;
+    } else if (strcmp(word, "-=") == 0) {
+        token->kind = MINUS_EQUALS;
+    } else if (strcmp(word, "*=") == 0) {
+        token->kind = STAR_EQUALS;
+    } else if (strcmp(word, "/=") == 0) {
+        token->kind = DIV_EQUALS;
+    } else if (strcmp(word, "<=") == 0) {
+        token->kind = LESS_EQUAL;
+    } else if (strcmp(word, ">=") == 0) {
+        token->kind = GREATER_EQUAL;
+    } else if (strcmp(word, "==") == 0) {
+        token->kind = DOUBLE_EQUALS;
+    } else if (strcmp(word, "!=") == 0) {
+        token->kind = BANG_EQUALS;
+    } else if (strcmp(word, "&&") == 0) {
+        token->kind = LOGICAL_AND;
+    } else if (strcmp(word, "||") == 0) {
+        token->kind = LOGICAL_OR;
+    } else if (strcmp(word, "->") == 0) {
+        token->kind = SKINNY_ARROW;
+    } else if (strcmp(word, "=>") == 0) {
+        token->kind = FAT_ARROW;
     } else if (strcmp(word, "(") == 0) {
         token->kind = LEFT_PAREN;
     } else if (strcmp(word, ")") == 0) {
